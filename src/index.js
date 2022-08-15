@@ -1,21 +1,22 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import _ from 'lodash';
+import parsers from './parsers.js';
 
 const getExtension = (fileName) => path.extname(fileName).slice(1);
 
 const fullPath = (fileName) => path.resolve(process.cwd(), fileName);
 
-const readFile = (fileName) => {
-  return readFileSync(fullPath(fileName), 'utf-8');
-};
+const readFile = (fileName) => readFileSync(fullPath(fileName), 'utf-8');
 
 const genDiff = (filepath1, filepath2, format = 'stylish') => {
-  const fileData1 = readFile(filepath1);
-  const fileData2 = readFile(filepath2);
+  const [fileData1, fileData2] = [readFile(filepath1), readFile(filepath2)]
 
-  const parsedFile1 = JSON.parse(fileData1);
-  const parsedFile2 = JSON.parse(fileData2);
+  const fileDataExt1 = getExtension(filepath1);
+  const fileDataExt2 = getExtension(filepath2);
+
+  const parsedFile1 = parsers(fileData1, fileDataExt1);
+  const parsedFile2 = parsers(fileData2, fileDataExt2);
 
   const keys1 = Object.keys(parsedFile1);
   const keys2 = Object.keys(parsedFile2);
@@ -35,7 +36,7 @@ const genDiff = (filepath1, filepath2, format = 'stylish') => {
       if (value1 === value2) {
         return `    ${key}: ${value1}`;
       } else {
-        return (`  - ${key}: ${value1}\n  + ${key}: ${value2}`);
+        return `  - ${key}: ${value1}\n  + ${key}: ${value2}`;
       }
     }
   });

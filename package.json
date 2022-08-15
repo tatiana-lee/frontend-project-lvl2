@@ -20,10 +20,10 @@
     "url": "https://github.com/tatiana-lee/frontend-project-lvl2/issues"
   },
   "homepage": "https://github.com/tatiana-lee/frontend-project-lvl2#readme",
-
   "dependencies": {
     "commander": "^9.4.0",
     "eslint": "^8.21.0",
+    "js-yaml": "^4.1.0",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
