@@ -4,22 +4,14 @@ import _ from 'lodash';
 import parsers from './parsers.js';
 
 const getExtension = (fileName) => path.extname(fileName).slice(1);
-
 const fullPath = (fileName) => path.resolve(process.cwd(), fileName);
-
 const readFile = (fileName) => readFileSync(fullPath(fileName), 'utf-8');
 
 const genDiff = (filepath1, filepath2, format = 'stylish') => {
   const [fileData1, fileData2] = [readFile(filepath1), readFile(filepath2)]
-
-  const fileDataExt1 = getExtension(filepath1);
-  const fileDataExt2 = getExtension(filepath2);
-
-  const parsedFile1 = parsers(fileData1, fileDataExt1);
-  const parsedFile2 = parsers(fileData2, fileDataExt2);
-
-  const keys1 = Object.keys(parsedFile1);
-  const keys2 = Object.keys(parsedFile2);
+  const [fileDataExt1, fileDataExt2] = [getExtension(filepath1), getExtension(filepath2)]
+  const [parsedFile1, parsedFile2] = [parsers(fileData1, fileDataExt1), parsers(fileData2, fileDataExt2)]
+  const [keys1, keys2] = [Object.keys(parsedFile1), Object.keys(parsedFile2)]
 
   const sortedKeys = _.sortBy(_.union(keys1, keys2));
   const resultDiff = sortedKeys.map((key) => {
